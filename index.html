@@ -39,20 +39,24 @@
 
     window.addEventListener('load', () => {
         filedata = window.localStorage.getItem('file');
-        speed = Number(window.localStorage.getItem('speed')) || 5.0;
+        speed = Number(window.localStorage.getItem('speed')) || 3.0;
         if (filedata) {
             img.src = filedata;
             document.getElementById('controls').style.visibility = 'hidden';
         }        
         speedInput.setAttribute('value', speed);
+        window.requestAnimationFrame(animate);
     })
     body.addEventListener('dblclick', () => {
         const controls = document.getElementById('controls')
         controls.style.visibility = controls.style.visibility == 'visible' ? 'hidden' : 'visible';
     })
     speedInput.addEventListener('input', event => {
-        speed = Number(event.data);
-        window.localStorage.setItem('speed', speed);
+        let newVal = Number(event.data);
+        if (newVal > 0) {
+            speed = Number(event.data);
+            window.localStorage.setItem('speed', speed);
+        }
     })
     fileInput.addEventListener('change', event => {
         const files = fileInput.files;
@@ -65,7 +69,6 @@
             reader.readAsDataURL(files[0]);
         }
     })
-
     
     function animate() {
         if (dx) {
@@ -90,9 +93,8 @@
         } else if (iy > window.innerHeight - img.clientHeight) {
             dy = true;
         }
+        window.requestAnimationFrame(animate);
     }
-    setInterval(animate, 1000 / FPS);
-
 
 </script>
 <html>
