@@ -35,7 +35,11 @@
     const fileInput = document.getElementById('file');
     const FPS = 60;
     body.appendChild(img)
-    let ix = 0.0, iy = 0.0, dx = dy = false, speed;
+    let ix = window.innerWidth * Math.random(), 
+        iy = window.innerHeight * Math.random(), 
+        dx = Math.random() > 0.5, 
+        dy = Math.random() > 0.5, 
+        speed;
 
     window.addEventListener('load', () => {
         filedata = window.localStorage.getItem('file');
