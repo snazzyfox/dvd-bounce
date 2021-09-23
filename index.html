@@ -95,28 +95,18 @@
     })
     
     function animate() {
-        if (dx) {
-            ix -= speed;
-        } else {
-            ix += speed;
-        }
-        if (dy) {
-            iy -= speed;
-        } else {
-            iy += speed;
-        }
+        // move the image
+        if (dx) { ix -= speed; } 
+        else { ix += speed; }
+        if (dy) { iy -= speed; } 
+        else { iy += speed; }
         img.style.left = ix + 'px';
         img.style.top = iy + 'px';
-        if (ix < 0) {
-            dx = false;
-        } else if (ix > window.innerWidth - img.clientWidth) {
-            dx = true;
-        }
-        if (iy < 0) {
-            dy = false;
-        } else if (iy > window.innerHeight - img.clientHeight) {
-            dy = true;
-        }
+        // flip direction if at edge
+        if (ix < 0) { dx = false; } 
+        else if (ix > window.innerWidth - img.clientWidth) { dx = true; }
+        if (iy < 0) { dy = false; } 
+        else if (iy > window.innerHeight - img.clientHeight) { dy = true; }
         window.requestAnimationFrame(animate);
     }
 
