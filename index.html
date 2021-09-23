@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<meta charset="UTF-8" />
+
+<head>
+    <style>
+        body {
+            background: transparent;
+            padding: 0;
+            margin: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        img {
+            position: absolute;
+        }
+    </style>
+</head>
+
+<body id="body">
+    <div id="controls">
+        Select image: <input type="file" id="file" accept="image/*"/>
+        Speed: <input type="number" id="speed" min="0.1" max="10" step="0.1"/>
+        <span>Double click anywhere on page to show/hide controls.</span>
+    </div>
+</body>
+
+<script>
+    const body = document.getElementById('body');
+    const speedInput = document.getElementById('speed');
+    const hide = document.getElementById('hide');
+    const img = document.createElement('img');
+    const fileInput = document.getElementById('file');
+    const FPS = 60;
+    body.appendChild(img)
+    let ix = 0.0, iy = 0.0, dx = dy = false, speed;
+
+    window.addEventListener('load', () => {
+        filedata = window.localStorage.getItem('file');
+        speed = Number(window.localStorage.getItem('speed')) || 5.0;
+        if (filedata) {
+            img.src = filedata;
+            document.getElementById('controls').style.visibility = 'hidden';
+        }        
+        speedInput.setAttribute('value', speed);
+    })
+    body.addEventListener('dblclick', () => {
+        const controls = document.getElementById('controls')
+        controls.style.visibility = controls.style.visibility == 'visible' ? 'hidden' : 'visible';
+    })
+    speedInput.addEventListener('input', event => {
+        speed = Number(event.data);
+        window.localStorage.setItem('speed', speed);
+    })
+    fileInput.addEventListener('change', event => {
+        const files = fileInput.files;
+        if (files.length > 0) {
+            let reader = new FileReader(); 
+            reader.addEventListener('load', () => {
+                img.src = reader.result;
+                window.localStorage.setItem('file', reader.result);
+            })
+            reader.readAsDataURL(files[0]);
+        }
+    })
+
+    
+    function animate() {
+        if (dx) {
+            ix -= speed;
+        } else {
+            ix += speed;
+        }
+        if (dy) {
+            iy -= speed;
+        } else {
+            iy += speed;
+        }
+        img.style.left = ix + 'px';
+        img.style.top = iy + 'px';
+        if (ix < 0) {
+            dx = false;
+        } else if (ix > window.innerWidth - img.clientWidth) {
+            dx = true;
+        }
+        if (iy < 0) {
+            dy = false;
+        } else if (iy > window.innerHeight - img.clientHeight) {
+            dy = true;
+        }
+    }
+    setInterval(animate, 1000 / FPS);
+
+
+</script>
+<html>
